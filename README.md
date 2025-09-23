@@ -1,38 +1,38 @@
 # LYEC Camera Driver
 
-Lucid kameralar için ROS tabanlı kamera sürücüsü. Bu paket Arena SDK kullanarak Lucid (eski adıyla Point Grey / FLIR) kameralarını ROS ortamında kontrol etmek için geliştirilmiştir.
+ROS-based camera driver for Lucid cameras. This package is developed to control Lucid (formerly Point Grey / FLIR) cameras in ROS environment using Arena SDK.
 
-## İçindekiler
+## Table of Contents
 
-- [Özellikler](#özellikler)
-- [Gereksinimler](#gereksinimler)
-- [Kurulum](#kurulum)
-- [Kullanım](#kullanım)
-- [Konfigürasyon](#konfigürasyon)
-- [Launch Dosyaları](#launch-dosyaları)
-- [Parametreler](#parametreler)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Launch Files](#launch-files)
+- [Parameters](#parameters)
 - [Topics](#topics)
-- [Sorun Giderme](#sorun-giderme)
+- [Troubleshooting](#troubleshooting)
 
-## Özellikler
+## Features
 
-- **Lucid Arena SDK desteği**: En son Arena SDK ile uyumlu
-- **Otomatik parlaklık kontrolü**: AOI (Area of Interest) tabanlı akıllı pozlama ayarı
-- **Manuel kamera kontrolü**: Pozlama, gain, fps gibi parametrelerin manuel kontrolü
-- **Çoklu kamera desteği**: Birden fazla kameranın eşzamanlı kullanımı
-- **Kamera kalibrasyonu**: OpenCV uyumlu kamera kalibrasyonu desteği
-- **ROS entegrasyonu**: Standart ROS görüntü mesajları ve servisler
-- **Gerçek zamanlı performans**: Düşük gecikme ile görüntü yayını
+- **Lucid Arena SDK support**: Compatible with latest Arena SDK
+- **Automatic brightness control**: Smart exposure adjustment based on AOI (Area of Interest)
+- **Manual camera control**: Manual control of parameters like exposure, gain, fps
+- **Multi-camera support**: Simultaneous use of multiple cameras
+- **Camera calibration**: OpenCV compatible camera calibration support
+- **ROS integration**: Standard ROS image messages and services
+- **Real-time performance**: Low latency image streaming
 
-## Gereksinimler
+## Requirements
 
-### Sistem Gereksinimleri
+### System Requirements
 - Ubuntu 18.04+ / ROS Melodic+ veya Ubuntu 20.04+ / ROS Noetic
 - OpenCV 3.2+
 - CMake 3.5+
 - C++11 uyumlu derleyici
 
-### ROS Bağımlılıkları
+### ROS Dependencies
 ```bash
 sudo apt-get install ros-$ROS_DISTRO-camera-info-manager \
                      ros-$ROS_DISTRO-image-transport \
@@ -42,82 +42,82 @@ sudo apt-get install ros-$ROS_DISTRO-camera-info-manager \
 ```
 
 ### Arena SDK
-Lucid Vision Labs'dan Arena SDK'yı indirip kurun:
-1. [Lucid Vision Labs](https://thinklucid.com/downloads-hub/) web sitesinden Arena SDK'yı indirin
-2. SDK'yı sisteminize kurun
-3. Gerekli çevre değişkenlerini ayarlayın
+Download and install Arena SDK from Lucid Vision Labs:
+1. Download Arena SDK from [Lucid Vision Labs](https://thinklucid.com/downloads-hub/) website
+2. Install the SDK on your system
+3. Set up required environment variables
 
-## Kurulum
+## Installation
 
-### 1. Workspace Oluşturma
+### 1. Create Workspace
 ```bash
 mkdir -p ~/catkin_ws/src
 cd ~/catkin_ws/src
 ```
 
-### 2. Paketi Klonlama
+### 2. Clone Package
 ```bash
 git clone <repository-url> lyec_camera
 ```
 
-### 3. Bağımlılıkları Kurma
+### 3. Install Dependencies
 ```bash
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y
 ```
 
-### 4. Derleme
+### 4. Build
 ```bash
 catkin_make
 source devel/setup.bash
 ```
 
-## Kullanım
+## Usage
 
-### Tek Kamera Başlatma
+### Launch Single Camera
 ```bash
 roslaunch lyec_camera mono.launch
 ```
 
-### Çoklu Kamera Başlatma
+### Launch Multi-Camera
 ```bash
 roslaunch lyec_camera multi_cam.launch
 ```
 
-### Stereo Kamera Sistemi
+### Stereo Camera System
 ```bash
-# Sol kamera
+# Left camera
 roslaunch lyec_camera left.launch
 
-# Sağ kamera (başka terminalde)
+# Right camera (in another terminal)
 roslaunch lyec_camera right.launch
 ```
 
-## Konfigürasyon
+## Configuration
 
-Kamera ayarları `config/config.yaml` dosyasında yapılandırılır:
+Camera settings are configured in `config/config.yaml` file:
 
 ```yaml
-# Görüntü ayarları
+# Image settings
 image_width: 1024
 image_height: 768
 binning_x: 2
 binning_y: 2
 
-# FPS ayarları
+# FPS settings
 ayarlanabilir_fps: true
 fps: 30
 
-# Kamera adı
+# Camera name
 camera_name: tis_front_cam
 
-# Otomatik parlaklık
+# Auto brightness
 auto_brightnes: false
 
-# Kalibrasyon dosyası
+# Calibration file
 ost_file: /path/to/calibration/ost.yaml
 
-# AOI (Area of Interest) ayarları
+# AOI (Area of Interest) settings
 AOI: 
   AOI_On: false
   AOI_x: 472
@@ -126,25 +126,25 @@ AOI:
   AOI_yukseklik: 200
   AOI_Rectangle: false
 
-# Manuel parlaklık kontrolü
+# Manual brightness control
 manual_brightnes: 
   exposure: 100
   ISO: 100
 ```
 
-### AOI (Area of Interest) Özelliği
+### AOI (Area of Interest) Feature
 
-AOI özelliği, görüntünün belirli bir bölgesindeki parlaklığa göre otomatik pozlama ayarı yapar:
+The AOI feature performs automatic exposure adjustment based on brightness in a specific region of the image:
 
-- `AOI_On`: AOI özelliğini aktif/pasif yapar
-- `AOI_x`, `AOI_y`: AOI bölgesinin merkez koordinatları
-- `AOI_genislik`, `AOI_yukseklik`: AOI bölgesinin boyutları
-- `AOI_Rectangle`: AOI bölgesini görüntü üzerinde gösterir
+- `AOI_On`: Enables/disables AOI feature
+- `AOI_x`, `AOI_y`: Center coordinates of AOI region
+- `AOI_genislik`, `AOI_yukseklik`: Dimensions of AOI region
+- `AOI_Rectangle`: Shows AOI region on the image
 
-## Launch Dosyaları
+## Launch Files
 
 ### mono.launch
-Tek kamera için temel launch dosyası:
+Basic launch file for single camera:
 ```xml
 <launch>
   <arg name="config_file" value="$(find lyec_camera)/config/config.yaml"/>
@@ -158,105 +158,101 @@ Tek kamera için temel launch dosyası:
 </launch>
 ```
 
-### Özelleştirme
-Launch dosyalarını ihtiyacınıza göre özelleştirebilirsiniz:
+### Customization
+You can customize launch files according to your needs:
 ```bash
 roslaunch lyec_camera mono.launch cam_name:=my_camera config_file:=/path/to/my_config.yaml
 ```
 
-## Parametreler
+## Parameters
 
-| Parametre | Tip | Varsayılan | Açıklama |
-|-----------|-----|------------|----------|
-| `config_file` | string | config.yaml | Konfigürasyon dosyası yolu |
-| `cam_name` | string | - | Kamera adı |
-| `ost_file` | string | - | Kalibrasyon dosyası yolu |
-| `fps` | int | 30 | Hedef FPS değeri |
-| `auto_brightness` | bool | false | Otomatik parlaklık kontrolü |
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `config_file` | string | config.yaml | Configuration file path |
+| `cam_name` | string | - | Camera name |
+| `ost_file` | string | - | Calibration file path |
+| `fps` | int | 30 | Target FPS value |
+| `auto_brightness` | bool | false | Auto brightness control |
 
 ## Topics
 
 ### Published Topics
-- `/camera/image_raw` (sensor_msgs/Image): Ham kamera görüntüsü
-- `/camera/camera_info` (sensor_msgs/CameraInfo): Kamera kalibrasyon bilgileri
+- `/camera/image_raw` (sensor_msgs/Image): Raw camera image
+- `/camera/camera_info` (sensor_msgs/CameraInfo): Camera calibration information
 
 ### Subscribed Topics
-Bu paket herhangi bir topic'e abone olmaz.
+This package does not subscribe to any topics.
 
 ## Services
 
-- `/camera/set_brightness`: Parlaklık ayarı
-- `/camera/set_exposure`: Pozlama ayarı
-- `/camera/set_binning`: Binning ayarı
+- `/camera/set_brightness`: Brightness adjustment
+- `/camera/set_exposure`: Exposure adjustment
+- `/camera/set_binning`: Binning adjustment
 
-## Kamera Kalibrasyonu
+## Camera Calibration
 
-Kamera kalibrasyonu için OpenCV kalibrasyon dosyalarını kullanın:
+Use OpenCV calibration files for camera calibration:
 
-1. `intrinsics/ost.yaml` dosyasını kamera kalibrasyon verilerinizle güncelleyin
-2. Launch dosyasında `ost_file` parametresini ayarlayın
+1. Update `intrinsics/ost.yaml` file with your camera calibration data
+2. Set the `ost_file` parameter in launch file
 
-## Performans İpuçları
+## Performance Tips
 
-1. **FPS Optimizasyonu**: Gereksiz yüksek FPS değerlerinden kaçının
-2. **AOI Kullanımı**: Sadece önemli bölgeyi izlemek için AOI kullanın
-3. **Binning**: Düşük çözünürlük yeterli ise binning kullanın
-4. **USB Bant Genişliği**: USB 3.0 bağlantısı kullanın
+1. **FPS Optimization**: Avoid unnecessarily high FPS values
+2. **AOI Usage**: Use AOI to monitor only important regions
+3. **Binning**: Use binning if low resolution is sufficient
+4. **USB Bandwidth**: Use USB 3.0 connection
 
-## Sorun Giderme
+## Troubleshooting
 
-### Kamera Bulunamıyor
+### Camera Not Found
 ```bash
-# Arena SDK kurulumunu kontrol edin
+# Check Arena SDK installation
 ls /opt/arena_sdk/
 
-# USB bağlantısını kontrol edin
+# Check USB connection
 lsusb | grep -i lucid
 ```
 
-### Düşük FPS
-- USB bant genişliğini kontrol edin
-- Görüntü boyutunu azaltın
-- Binning kullanın
+### Low FPS
+- Check USB bandwidth
+- Reduce image size
+- Use binning
 
-### Görüntü Gelmemiyor
-- Kamera konfigürasyonunu kontrol edin
-- ROS topic'lerini kontrol edin: `rostopic list`
-- Node loglarını inceleyin: `rosnode info lyec_camera_node`
+### No Image Received
+- Check camera configuration
+- Check ROS topics: `rostopic list`
+- Inspect node logs: `rosnode info lyec_camera_node`
 
-### Hata Logları
+### Error Logs
 ```bash
-# ROS loglarını görüntüleme
+# View ROS logs
 rqt_console
 
-# Terminal çıktısını izleme
+# Monitor terminal output
 roslaunch lyec_camera mono.launch --screen
 ```
 
-## Lisans
+## License
 
-Bu proje BSD lisansı altında dağıtılmaktadır. Detaylar için LICENSE dosyasına bakın.
+This project is distributed under the BSD license. See LICENSE file for details.
 
-## Katkıda Bulunma
+## Contributing
 
-1. Bu repository'yi fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add amazing feature'`)
-4. Branch'ınızı push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
+1. Fork this repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Create Pull Request
 
-## İletişim
+## Contact
 
-**Geliştirici**: Lutfu Aydin UCAR  
-**E-posta**: lutfuucar8@gmail.com
+**Developer**: wroomhers
+**Email**: lutfuucar8@gmail.com
 
-## Versiyon Geçmişi
+## Version History
 
-- **v0.0.0**: İlk sürüm
-  - Temel kamera sürücüsü
-  - AOI tabanlı otomatik pozlama
-  - Çoklu kamera desteği
-
----
-
-*Bu README dosyası sürekli güncellenmektedir. Son sürüm için repository'yi kontrol edin.*
+- **v0.0.0**: Initial release
+  - Basic camera driver
+  - AOI-based automatic exposure
+  - Multi-camera support
