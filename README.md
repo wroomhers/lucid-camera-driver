@@ -57,7 +57,7 @@ cd ~/catkin_ws/src
 
 ### 2. Clone Package
 ```bash
-git clone <repository-url> lyec_camera
+git clone https://github.com/wroomhers/lucid-camera-driver
 ```
 
 ### 3. Install Dependencies
