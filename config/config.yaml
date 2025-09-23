@@ -1,0 +1,33 @@
+image_width: 1024
+image_height: 768
+
+binning_x: 2
+binning_y: 2
+ayarlanabilir_fps: true # adjustable fps 
+fps: 30
+
+camera_name: tis_front_cam
+
+auto_brightnes: false
+
+ost_file : /home/wroomhers/lyec-driver/src/lyec-camera-driver/intrinsics/ost.yaml
+
+# works if auto_brightnes is false and AOI_On is true
+# Generates best brightness value for Area of Interest
+AOI: 
+  AOI_On: false
+  AOI_x: 472
+  AOI_y: 610
+  AOI_genislik: 600
+  AOI_yukseklik: 200
+  AOI_Rectangle: false
+
+
+
+# works if auto_brightnes and  AOI_On is false
+# Gives exposure and ISO values manually
+manual_brightnes: 
+  exposure: 100
+  ISO: 100
+
+

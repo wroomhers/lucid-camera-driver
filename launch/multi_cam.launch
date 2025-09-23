@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find lyec_camera)/launch/left.launch"/>
+    <include file="$(find lyec_camera)/launch/right.launch"/>
+</launch>
